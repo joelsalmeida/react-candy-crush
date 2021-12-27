@@ -4,7 +4,7 @@ const width = 8;
 const candyColors = ['blue', 'green', 'orange', 'purple', 'red', 'yellow'];
 
 function App() {
-  const [currentCandyArrangement, setCurrentCandyArrangement] = useState();
+  const [currentCandyArrangement, setCurrentCandyArrangement] = useState([]);
 
   const createBoard = () => {
     const randomCandyArrangement = [];
@@ -21,7 +21,19 @@ function App() {
 
   useEffect(() => createBoard(), []);
 
-  return <div className="App">Candy Crush</div>;
+  return (
+    <div className="app">
+      <div className="game">
+        {currentCandyArrangement.map((candyColor, index) => (
+          <img
+            key={index}
+            style={{ backgroundColor: candyColor }}
+            alt={`Candy ${candyColor}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
 }
 
 export default App;
