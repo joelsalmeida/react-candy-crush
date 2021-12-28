@@ -6,6 +6,9 @@ const candyColors = ['blue', 'green', 'orange', 'purple', 'red', 'yellow'];
 function App() {
   const [currentCandyArrangement, setCurrentCandyArrangement] = useState([]);
 
+  const [candyDragged, setCandyDragged] = useState(null);
+  const [candyDropped, setCandyDropped] = useState(null);
+
   const createBoard = () => {
     const randomCandyArrangement = [];
 
@@ -23,7 +26,7 @@ function App() {
 
   useEffect(() => {
     const checkForColumnsOfFour = () => {
-      for (let index = 0; index < 39; index++) {
+      for (let index = 0; index <= 39; index++) {
         const currentCandy = currentCandyArrangement[index];
         const columnFour = [index, index + width, index + width * 2, index + width * 3];
 
@@ -36,7 +39,7 @@ function App() {
     };
 
     const checkForColumnsOfThree = () => {
-      for (let index = 0; index < 47; index++) {
+      for (let index = 0; index <= 47; index++) {
         const currentCandy = currentCandyArrangement[index];
         const columnThree = [index, index + width, index + width * 2];
 
@@ -103,13 +106,29 @@ function App() {
       checkForRowsOfFour();
       checkForRowsOfThree();
 
-      addGravity()
+      addGravity();
 
       setCurrentCandyArrangement([...currentCandyArrangement]);
     }, 100);
 
     return () => clearInterval(timer);
   }, [currentCandyArrangement]);
+
+  const dragStart = ({ target }) => {
+    setCandyDragged(target);
+  };
+
+  const dragDrop = ({ target }) => {
+    setCandyDropped(target);
+  };
+
+  const dragEnd = ({ target }) => {
+    const candyDraggedId = parseInt(candyDragged.getAttribute('data-id'));
+    const candyDroppedId = parseInt(candyDropped.getAttribute('data-id'));
+
+    currentCandyArrangement[candyDroppedId] = candyDragged.style.backgroundColor;
+    currentCandyArrangement[candyDraggedId] = candyDropped.style.backgroundColor;
+  };
 
   return (
     <div className="app">
@@ -119,6 +138,14 @@ function App() {
             key={index}
             style={{ backgroundColor: candyColor }}
             alt={`Candy ${candyColor}`}
+            data-id={index}
+            draggable={true}
+            onDragEnter={(event) => event.preventDefault()}
+            onDragOver={(event) => event.preventDefault()}
+            onDragLeave={(event) => event.preventDefault()}
+            onDragStart={dragStart}
+            onDrop={dragDrop}
+            onDragEnd={dragEnd}
           />
         ))}
       </div>
