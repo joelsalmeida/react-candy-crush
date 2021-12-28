@@ -21,6 +21,42 @@ function App() {
 
   useEffect(() => createBoard(), []);
 
+  useEffect(() => {
+    const checkForColumnsOfFour = () => {
+      for (let index = 0; index < 39; index++) {
+        const currentCandy = currentCandyArrangement[index];
+        const columnFour = [index, index + width, index + width * 2, index + width * 3];
+
+        if (
+          columnFour.every((candy) => currentCandyArrangement[candy] === currentCandy)
+        ) {
+          columnFour.forEach((candy) => (currentCandyArrangement[candy] = ''));
+        }
+      }
+    };
+
+    const checkForColumnsOfThree = () => {
+      for (let index = 0; index < 47; index++) {
+        const currentCandy = currentCandyArrangement[index];
+        const columnThree = [index, index + width, index + width * 2];
+
+        if (
+          columnThree.every((candy) => currentCandyArrangement[candy] === currentCandy)
+        ) {
+          columnThree.forEach((candy) => (currentCandyArrangement[candy] = ''));
+        }
+      }
+    };
+
+    const timer = setInterval(() => {
+      checkForColumnsOfFour();
+      checkForColumnsOfThree();
+      setCurrentCandyArrangement([...currentCandyArrangement]);
+    }, 100);
+
+    return () => clearInterval(timer);
+  }, [currentCandyArrangement]);
+
   return (
     <div className="app">
       <div className="game">
