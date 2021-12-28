@@ -48,9 +48,44 @@ function App() {
       }
     };
 
+    const checkForRowsOfFour = () => {
+      for (let index = 0; index < 64; index++) {
+        const currentCandy = currentCandyArrangement[index];
+        const rowFour = [index, index + 1, index + 2, index + 3];
+        const toIgnore = [
+          5, 6, 7, 13, 14, 15, 21, 22, 23, 29, 30, 31, 37, 38, 39, 45, 46, 47, 53, 54, 55,
+          62, 63, 64,
+        ];
+
+        if (toIgnore.includes(index)) continue;
+
+        if (rowFour.every((candy) => currentCandyArrangement[candy] === currentCandy)) {
+          rowFour.forEach((candy) => (currentCandyArrangement[candy] = ''));
+        }
+      }
+    };
+
+    const checkForRowsOfThree = () => {
+      for (let index = 0; index < 64; index++) {
+        const currentCandy = currentCandyArrangement[index];
+        const rowThree = [index, index + 1, index + 2];
+        const toIgnore = [6, 7, 14, 15, 22, 23, 30, 31, 38, 39, 46, 47, 54, 55, 63, 64];
+
+        if (toIgnore.includes(index)) continue;
+
+        if (rowThree.every((candy) => currentCandyArrangement[candy] === currentCandy)) {
+          rowThree.forEach((candy) => (currentCandyArrangement[candy] = ''));
+        }
+      }
+    };
+
     const timer = setInterval(() => {
       checkForColumnsOfFour();
       checkForColumnsOfThree();
+
+      checkForRowsOfFour();
+      checkForRowsOfThree();
+
       setCurrentCandyArrangement([...currentCandyArrangement]);
     }, 100);
 
