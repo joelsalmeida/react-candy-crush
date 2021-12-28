@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 const width = 8;
 const candyColors = ['blue', 'green', 'orange', 'purple', 'red', 'yellow'];
@@ -22,83 +22,83 @@ function App() {
     setCurrentCandyArrangement(randomCandyArrangement);
   };
 
+  const checkForColumnsOfFour = useCallback(() => {
+    for (let index = 0; index <= 39; index++) {
+      const currentCandy = currentCandyArrangement[index];
+      const columnFour = [index, index + width, index + width * 2, index + width * 3];
+
+      if (columnFour.every((candy) => currentCandyArrangement[candy] === currentCandy)) {
+        columnFour.forEach((candy) => (currentCandyArrangement[candy] = ''));
+        return true;
+      }
+    }
+  }, [currentCandyArrangement]);
+
+  const checkForColumnsOfThree = useCallback(() => {
+    for (let index = 0; index <= 47; index++) {
+      const currentCandy = currentCandyArrangement[index];
+      const columnThree = [index, index + width, index + width * 2];
+
+      if (columnThree.every((candy) => currentCandyArrangement[candy] === currentCandy)) {
+        columnThree.forEach((candy) => (currentCandyArrangement[candy] = ''));
+        return true;
+      }
+    }
+  }, [currentCandyArrangement]);
+
+  const checkForRowsOfFour = useCallback(() => {
+    for (let index = 0; index < 64; index++) {
+      const currentCandy = currentCandyArrangement[index];
+      const rowFour = [index, index + 1, index + 2, index + 3];
+      const toIgnore = [
+        5, 6, 7, 13, 14, 15, 21, 22, 23, 29, 30, 31, 37, 38, 39, 45, 46, 47, 53, 54, 55,
+        62, 63, 64,
+      ];
+
+      if (toIgnore.includes(index)) continue;
+
+      if (rowFour.every((candy) => currentCandyArrangement[candy] === currentCandy)) {
+        rowFour.forEach((candy) => (currentCandyArrangement[candy] = ''));
+        return true;
+      }
+    }
+  }, [currentCandyArrangement]);
+
+  const checkForRowsOfThree = useCallback(() => {
+    for (let index = 0; index < 64; index++) {
+      const currentCandy = currentCandyArrangement[index];
+      const rowThree = [index, index + 1, index + 2];
+      const toIgnore = [6, 7, 14, 15, 22, 23, 30, 31, 38, 39, 46, 47, 54, 55, 63, 64];
+
+      if (toIgnore.includes(index)) continue;
+
+      if (rowThree.every((candy) => currentCandyArrangement[candy] === currentCandy)) {
+        rowThree.forEach((candy) => (currentCandyArrangement[candy] = ''));
+        return true;
+      }
+    }
+  }, [currentCandyArrangement]);
+
+  const addGravity = useCallback(() => {
+    for (let index = 0; index <= 55; index++) {
+      const firstRow = [0, 1, 2, 3, 4, 5, 6, 7];
+      const isFirstRow = firstRow.includes(index);
+
+      if (isFirstRow && currentCandyArrangement[index] === '') {
+        const randomNumber = Math.floor(Math.random() * candyColors.length);
+        currentCandyArrangement[index] = candyColors[randomNumber];
+      }
+
+      if (currentCandyArrangement[index + width] === '') {
+        currentCandyArrangement[index + width] = currentCandyArrangement[index];
+        currentCandyArrangement[index] = '';
+      }
+    }
+  }, [currentCandyArrangement]);
+
   useEffect(() => createBoard(), []);
 
   useEffect(() => {
-    const checkForColumnsOfFour = () => {
-      for (let index = 0; index <= 39; index++) {
-        const currentCandy = currentCandyArrangement[index];
-        const columnFour = [index, index + width, index + width * 2, index + width * 3];
-
-        if (
-          columnFour.every((candy) => currentCandyArrangement[candy] === currentCandy)
-        ) {
-          columnFour.forEach((candy) => (currentCandyArrangement[candy] = ''));
-        }
-      }
-    };
-
-    const checkForColumnsOfThree = () => {
-      for (let index = 0; index <= 47; index++) {
-        const currentCandy = currentCandyArrangement[index];
-        const columnThree = [index, index + width, index + width * 2];
-
-        if (
-          columnThree.every((candy) => currentCandyArrangement[candy] === currentCandy)
-        ) {
-          columnThree.forEach((candy) => (currentCandyArrangement[candy] = ''));
-        }
-      }
-    };
-
-    const checkForRowsOfFour = () => {
-      for (let index = 0; index < 64; index++) {
-        const currentCandy = currentCandyArrangement[index];
-        const rowFour = [index, index + 1, index + 2, index + 3];
-        const toIgnore = [
-          5, 6, 7, 13, 14, 15, 21, 22, 23, 29, 30, 31, 37, 38, 39, 45, 46, 47, 53, 54, 55,
-          62, 63, 64,
-        ];
-
-        if (toIgnore.includes(index)) continue;
-
-        if (rowFour.every((candy) => currentCandyArrangement[candy] === currentCandy)) {
-          rowFour.forEach((candy) => (currentCandyArrangement[candy] = ''));
-        }
-      }
-    };
-
-    const checkForRowsOfThree = () => {
-      for (let index = 0; index < 64; index++) {
-        const currentCandy = currentCandyArrangement[index];
-        const rowThree = [index, index + 1, index + 2];
-        const toIgnore = [6, 7, 14, 15, 22, 23, 30, 31, 38, 39, 46, 47, 54, 55, 63, 64];
-
-        if (toIgnore.includes(index)) continue;
-
-        if (rowThree.every((candy) => currentCandyArrangement[candy] === currentCandy)) {
-          rowThree.forEach((candy) => (currentCandyArrangement[candy] = ''));
-        }
-      }
-    };
-
-    const addGravity = () => {
-      for (let i = 0; i <= 55; i++) {
-        const firstRow = [0, 1, 2, 3, 4, 5, 6, 7];
-        const isFirstRow = firstRow.includes(i);
-
-        if (isFirstRow && currentCandyArrangement[i] === '') {
-          let randomNumber = Math.floor(Math.random() * candyColors.length);
-          currentCandyArrangement[i] = candyColors[randomNumber];
-        }
-
-        if (currentCandyArrangement[i + width] === '') {
-          currentCandyArrangement[i + width] = currentCandyArrangement[i];
-          currentCandyArrangement[i] = '';
-        }
-      }
-    };
-
     const timer = setInterval(() => {
       checkForColumnsOfFour();
       checkForColumnsOfThree();
@@ -112,7 +112,14 @@ function App() {
     }, 100);
 
     return () => clearInterval(timer);
-  }, [currentCandyArrangement]);
+  }, [
+    addGravity,
+    checkForColumnsOfFour,
+    checkForColumnsOfThree,
+    checkForRowsOfFour,
+    checkForRowsOfThree,
+    currentCandyArrangement,
+  ]);
 
   const dragStart = ({ target }) => {
     setCandyDragged(target);
@@ -122,12 +129,41 @@ function App() {
     setCandyDropped(target);
   };
 
-  const dragEnd = ({ target }) => {
+  const dragEnd = () => {
     const candyDraggedId = parseInt(candyDragged.getAttribute('data-id'));
     const candyDroppedId = parseInt(candyDropped.getAttribute('data-id'));
 
+    const validMoves = [
+      candyDraggedId - 1,
+      candyDraggedId + 1,
+      candyDraggedId - width,
+      candyDraggedId + width,
+    ];
+
+    const validMove = validMoves.includes(candyDroppedId);
+    if (!validMove) return;
+
     currentCandyArrangement[candyDroppedId] = candyDragged.style.backgroundColor;
     currentCandyArrangement[candyDraggedId] = candyDropped.style.backgroundColor;
+
+    const columnOfFour = checkForColumnsOfFour();
+    const rowOfFour = checkForRowsOfFour();
+    const columnOfThree = checkForColumnsOfThree();
+    const rowOfThree = checkForRowsOfThree();
+
+    if (
+      candyDroppedId &&
+      validMove &&
+      (columnOfFour || rowOfFour || columnOfThree || rowOfThree)
+    ) {
+      setCandyDragged(null);
+      setCandyDropped(null);
+    } else {
+      currentCandyArrangement[candyDraggedId] = candyDragged.style.backgroundColor;
+      currentCandyArrangement[candyDroppedId] = candyDropped.style.backgroundColor;
+      setCurrentCandyArrangement([...currentCandyArrangement]);
+    }
+
   };
 
   return (
