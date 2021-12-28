@@ -79,12 +79,31 @@ function App() {
       }
     };
 
+    const addGravity = () => {
+      for (let i = 0; i <= 55; i++) {
+        const firstRow = [0, 1, 2, 3, 4, 5, 6, 7];
+        const isFirstRow = firstRow.includes(i);
+
+        if (isFirstRow && currentCandyArrangement[i] === '') {
+          let randomNumber = Math.floor(Math.random() * candyColors.length);
+          currentCandyArrangement[i] = candyColors[randomNumber];
+        }
+
+        if (currentCandyArrangement[i + width] === '') {
+          currentCandyArrangement[i + width] = currentCandyArrangement[i];
+          currentCandyArrangement[i] = '';
+        }
+      }
+    };
+
     const timer = setInterval(() => {
       checkForColumnsOfFour();
       checkForColumnsOfThree();
 
       checkForRowsOfFour();
       checkForRowsOfThree();
+
+      addGravity()
 
       setCurrentCandyArrangement([...currentCandyArrangement]);
     }, 100);
