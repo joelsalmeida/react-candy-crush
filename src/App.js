@@ -1,7 +1,22 @@
 import { useCallback, useEffect, useState } from 'react';
+import blank from './images/blank.png';
+import blueCandy from './images/blue-candy.png';
+import greenCandy from './images/green-candy.png';
+import orangeCandy from './images/orange-candy.png';
+import purpleCandy from './images/purple-candy.png';
+import redCandy from './images/red-candy.png';
+import yellowCandy from './images/yellow-candy.png';
 
 const width = 8;
-const candyColors = ['blue', 'green', 'orange', 'purple', 'red', 'yellow'];
+const candyColors = [
+  blank,
+  blueCandy,
+  greenCandy,
+  orangeCandy,
+  purpleCandy,
+  redCandy,
+  yellowCandy,
+];
 
 function App() {
   const [currentCandyArrangement, setCurrentCandyArrangement] = useState([]);
@@ -28,7 +43,7 @@ function App() {
       const columnFour = [index, index + width, index + width * 2, index + width * 3];
 
       if (columnFour.every((candy) => currentCandyArrangement[candy] === currentCandy)) {
-        columnFour.forEach((candy) => (currentCandyArrangement[candy] = ''));
+        columnFour.forEach((candy) => (currentCandyArrangement[candy] = blank));
         return true;
       }
     }
@@ -40,7 +55,7 @@ function App() {
       const columnThree = [index, index + width, index + width * 2];
 
       if (columnThree.every((candy) => currentCandyArrangement[candy] === currentCandy)) {
-        columnThree.forEach((candy) => (currentCandyArrangement[candy] = ''));
+        columnThree.forEach((candy) => (currentCandyArrangement[candy] = blank));
         return true;
       }
     }
@@ -58,7 +73,7 @@ function App() {
       if (toIgnore.includes(index)) continue;
 
       if (rowFour.every((candy) => currentCandyArrangement[candy] === currentCandy)) {
-        rowFour.forEach((candy) => (currentCandyArrangement[candy] = ''));
+        rowFour.forEach((candy) => (currentCandyArrangement[candy] = blank));
         return true;
       }
     }
@@ -73,7 +88,7 @@ function App() {
       if (toIgnore.includes(index)) continue;
 
       if (rowThree.every((candy) => currentCandyArrangement[candy] === currentCandy)) {
-        rowThree.forEach((candy) => (currentCandyArrangement[candy] = ''));
+        rowThree.forEach((candy) => (currentCandyArrangement[candy] = blank));
         return true;
       }
     }
@@ -84,14 +99,14 @@ function App() {
       const firstRow = [0, 1, 2, 3, 4, 5, 6, 7];
       const isFirstRow = firstRow.includes(index);
 
-      if (isFirstRow && currentCandyArrangement[index] === '') {
+      if (isFirstRow && currentCandyArrangement[index] === blank) {
         const randomNumber = Math.floor(Math.random() * candyColors.length);
         currentCandyArrangement[index] = candyColors[randomNumber];
       }
 
-      if (currentCandyArrangement[index + width] === '') {
+      if (currentCandyArrangement[index + width] === blank) {
         currentCandyArrangement[index + width] = currentCandyArrangement[index];
-        currentCandyArrangement[index] = '';
+        currentCandyArrangement[index] = blank;
       }
     }
   }, [currentCandyArrangement]);
@@ -143,8 +158,8 @@ function App() {
     const validMove = validMoves.includes(candyDroppedId);
     if (!validMove) return;
 
-    currentCandyArrangement[candyDroppedId] = candyDragged.style.backgroundColor;
-    currentCandyArrangement[candyDraggedId] = candyDropped.style.backgroundColor;
+    currentCandyArrangement[candyDroppedId] = candyDragged.getAttribute('src');
+    currentCandyArrangement[candyDraggedId] = candyDropped.getAttribute('src');
 
     const columnOfFour = checkForColumnsOfFour();
     const rowOfFour = checkForRowsOfFour();
@@ -159,11 +174,10 @@ function App() {
       setCandyDragged(null);
       setCandyDropped(null);
     } else {
-      currentCandyArrangement[candyDraggedId] = candyDragged.style.backgroundColor;
-      currentCandyArrangement[candyDroppedId] = candyDropped.style.backgroundColor;
+      currentCandyArrangement[candyDraggedId] = candyDragged.getAttribute('src');
+      currentCandyArrangement[candyDroppedId] = candyDropped.getAttribute('src');
       setCurrentCandyArrangement([...currentCandyArrangement]);
     }
-
   };
 
   return (
@@ -172,7 +186,7 @@ function App() {
         {currentCandyArrangement.map((candyColor, index) => (
           <img
             key={index}
-            style={{ backgroundColor: candyColor }}
+            src={candyColor}
             alt={`Candy ${candyColor}`}
             data-id={index}
             draggable={true}
