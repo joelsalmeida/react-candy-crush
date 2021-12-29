@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import ScoreBoard from './components/ScoreBoard';
 import blank from './images/blank.png';
 import blueCandy from './images/blue-candy.png';
 import greenCandy from './images/green-candy.png';
@@ -18,11 +19,15 @@ const candyColors = [
   yellowCandy,
 ];
 
+const pointX3 = 10;
+const pointX4 = 25;
+
 function App() {
   const [currentCandyArrangement, setCurrentCandyArrangement] = useState([]);
 
   const [candyDragged, setCandyDragged] = useState(null);
   const [candyDropped, setCandyDropped] = useState(null);
+  const [score, setScore] = useState(0);
 
   const createBoard = () => {
     const randomCandyArrangement = [];
@@ -41,9 +46,11 @@ function App() {
     for (let index = 0; index <= 39; index++) {
       const currentCandy = currentCandyArrangement[index];
       const columnFour = [index, index + width, index + width * 2, index + width * 3];
+      const isNotBlank = currentCandyArrangement[index] !== blank;
 
-      if (columnFour.every((candy) => currentCandyArrangement[candy] === currentCandy)) {
+      if (columnFour.every((candy) => currentCandyArrangement[candy] === currentCandy && isNotBlank)) {
         columnFour.forEach((candy) => (currentCandyArrangement[candy] = blank));
+        setScore((score) => score + pointX4);
         return true;
       }
     }
@@ -53,9 +60,12 @@ function App() {
     for (let index = 0; index <= 47; index++) {
       const currentCandy = currentCandyArrangement[index];
       const columnThree = [index, index + width, index + width * 2];
+      const isNotBlank = currentCandyArrangement[index] !== blank;
 
-      if (columnThree.every((candy) => currentCandyArrangement[candy] === currentCandy)) {
+
+      if (columnThree.every((candy) => currentCandyArrangement[candy] === currentCandy) && isNotBlank) {
         columnThree.forEach((candy) => (currentCandyArrangement[candy] = blank));
+        setScore((score) => score + pointX3);
         return true;
       }
     }
@@ -69,11 +79,14 @@ function App() {
         5, 6, 7, 13, 14, 15, 21, 22, 23, 29, 30, 31, 37, 38, 39, 45, 46, 47, 53, 54, 55,
         62, 63, 64,
       ];
+      const isNotBlank = currentCandyArrangement[index] !== blank;
+
 
       if (toIgnore.includes(index)) continue;
 
-      if (rowFour.every((candy) => currentCandyArrangement[candy] === currentCandy)) {
+      if (rowFour.every((candy) => currentCandyArrangement[candy] === currentCandy) && isNotBlank) {
         rowFour.forEach((candy) => (currentCandyArrangement[candy] = blank));
+        setScore((score) => score + pointX4);
         return true;
       }
     }
@@ -84,11 +97,14 @@ function App() {
       const currentCandy = currentCandyArrangement[index];
       const rowThree = [index, index + 1, index + 2];
       const toIgnore = [6, 7, 14, 15, 22, 23, 30, 31, 38, 39, 46, 47, 54, 55, 63, 64];
+      const isNotBlank = currentCandyArrangement[index] !== blank;
+
 
       if (toIgnore.includes(index)) continue;
 
-      if (rowThree.every((candy) => currentCandyArrangement[candy] === currentCandy)) {
+      if (rowThree.every((candy) => currentCandyArrangement[candy] === currentCandy) && isNotBlank) {
         rowThree.forEach((candy) => (currentCandyArrangement[candy] = blank));
+        setScore((score) => score + pointX3);
         return true;
       }
     }
@@ -199,6 +215,7 @@ function App() {
           />
         ))}
       </div>
+      <ScoreBoard score={score} />
     </div>
   );
 }
