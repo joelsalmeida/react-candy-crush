@@ -48,7 +48,11 @@ function App() {
       const columnFour = [index, index + width, index + width * 2, index + width * 3];
       const isNotBlank = currentCandyArrangement[index] !== blank;
 
-      if (columnFour.every((candy) => currentCandyArrangement[candy] === currentCandy && isNotBlank)) {
+      if (
+        columnFour.every(
+          (candy) => currentCandyArrangement[candy] === currentCandy && isNotBlank
+        )
+      ) {
         columnFour.forEach((candy) => (currentCandyArrangement[candy] = blank));
         setScore((score) => score + pointX4);
         return true;
@@ -62,8 +66,10 @@ function App() {
       const columnThree = [index, index + width, index + width * 2];
       const isNotBlank = currentCandyArrangement[index] !== blank;
 
-
-      if (columnThree.every((candy) => currentCandyArrangement[candy] === currentCandy) && isNotBlank) {
+      if (
+        columnThree.every((candy) => currentCandyArrangement[candy] === currentCandy) &&
+        isNotBlank
+      ) {
         columnThree.forEach((candy) => (currentCandyArrangement[candy] = blank));
         setScore((score) => score + pointX3);
         return true;
@@ -81,10 +87,12 @@ function App() {
       ];
       const isNotBlank = currentCandyArrangement[index] !== blank;
 
-
       if (toIgnore.includes(index)) continue;
 
-      if (rowFour.every((candy) => currentCandyArrangement[candy] === currentCandy) && isNotBlank) {
+      if (
+        rowFour.every((candy) => currentCandyArrangement[candy] === currentCandy) &&
+        isNotBlank
+      ) {
         rowFour.forEach((candy) => (currentCandyArrangement[candy] = blank));
         setScore((score) => score + pointX4);
         return true;
@@ -99,10 +107,12 @@ function App() {
       const toIgnore = [6, 7, 14, 15, 22, 23, 30, 31, 38, 39, 46, 47, 54, 55, 63, 64];
       const isNotBlank = currentCandyArrangement[index] !== blank;
 
-
       if (toIgnore.includes(index)) continue;
 
-      if (rowThree.every((candy) => currentCandyArrangement[candy] === currentCandy) && isNotBlank) {
+      if (
+        rowThree.every((candy) => currentCandyArrangement[candy] === currentCandy) &&
+        isNotBlank
+      ) {
         rowThree.forEach((candy) => (currentCandyArrangement[candy] = blank));
         setScore((score) => score + pointX3);
         return true;
@@ -198,6 +208,8 @@ function App() {
 
   return (
     <div className="app">
+      <span className="title">Crush Candy</span>
+
       <div className="game">
         {currentCandyArrangement.map((candyColor, index) => (
           <img
@@ -215,6 +227,7 @@ function App() {
           />
         ))}
       </div>
+
       <ScoreBoard score={score} />
     </div>
   );

@@ -1,9 +1,9 @@
-const ScoreBoard = ({score}) => {
-  return(
-    <div className='score-board'>
-      <span>{score}</span>
+const ScoreBoard = ({ score }) => {
+  return (
+    <div className="score-board">
+      <span>Score: {score}</span>
     </div>
-  )
-}
+  );
+};
 
 export default ScoreBoard;
